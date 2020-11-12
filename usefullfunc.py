@@ -64,7 +64,7 @@ def InsertQuerry(table, lista_columnas, lista_datos):
         print("Insert no tiene valores")
         return False
 
-#Elimina una linea
+#Elimina una linea de la bbdd
 def DeleteQuerry(table, text):
     cur = con.cursor()
     try:
@@ -74,6 +74,19 @@ def DeleteQuerry(table, text):
         print("Exito al ejecutar DELETE querry")
     except:
         print("Error al intentar eliminar la linea")
+
+def UpdateQuerry(table, set_parameters, where_parameters):
+    cur = con.cursor()
+    try:
+        if where_parameters == "":
+            querry_text = "UPDATE " + table + "set " + set_parameters
+        else:
+            querry_text = "UPDATE " + table + "set " + set_parameters + " WHERE " + where_parameters
+        cur.execute(querry_text)
+        con.commit()
+        print("Exito al ejecutar UPDATE querry")
+    except:
+        print("Error al intentar modificar la linea")
 
 #Muestra en la consola el listado de opciones
 def DisplayMenu(lista_menu):
