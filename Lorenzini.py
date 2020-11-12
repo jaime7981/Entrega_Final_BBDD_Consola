@@ -12,7 +12,7 @@ def Historial_pedidos(login_nombre_usuario):
         print("\nHistorial de pedidos\n")
         
         headers=["ID","Dirección","# ", "Fecha","Monto"]
-        sql= psfunc.PrintQuerry2(f"SELECT id_pedido, calle,numero, fecha_pedido, monto FROM (SELECT id_pedido, (monto_producto+COALESCE(monto_menu,0)) AS monto FROM (SELECT id_pedido, monto_producto, monto_menu FROM (SELECT DISTINCT  id_pedido,  (cantidad_producto*precio) AS monto_producto \
+        sql= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, calle,numero, fecha_pedido, monto FROM (SELECT id_pedido, (monto_producto+COALESCE(monto_menu,0)) AS monto FROM (SELECT id_pedido, monto_producto, monto_menu FROM (SELECT DISTINCT  id_pedido,  (cantidad_producto*precio) AS monto_producto \
         FROM pedido_producto INNER JOIN productos \
         USING(id_producto) \
         ORDER BY id_pedido) AS t1 FULL JOIN (SELECT DISTINCT  id_pedido,  SUM((cantidad_menu*precio)) AS monto_menu \
@@ -42,7 +42,7 @@ def Historial_pedidos(login_nombre_usuario):
                 id_order= psfunc.QuerryOptionIdCheck(querry,text)
                 if id_order!=0:
                     headers=["ID","Dirección","# ", "Fecha","Monto"]
-                    sql_2= psfunc.PrintQuerry2(f"SELECT id_pedido, calle,numero, fecha_pedido, monto FROM (SELECT id_pedido, (monto_producto+COALESCE(monto_menu,0)) AS monto FROM (SELECT id_pedido, monto_producto, monto_menu FROM (SELECT DISTINCT  id_pedido,  (cantidad_producto*precio) AS monto_producto \
+                    sql_2= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, calle,numero, fecha_pedido, monto FROM (SELECT id_pedido, (monto_producto+COALESCE(monto_menu,0)) AS monto FROM (SELECT id_pedido, monto_producto, monto_menu FROM (SELECT DISTINCT  id_pedido,  (cantidad_producto*precio) AS monto_producto \
                                         FROM pedido_producto INNER JOIN productos \
                                         USING(id_producto) \
                                         ORDER BY id_pedido) AS t1 FULL JOIN (SELECT DISTINCT  id_pedido,  SUM((cantidad_menu*precio)) AS monto_menu \
@@ -67,7 +67,7 @@ def Historial_pedidos(login_nombre_usuario):
                         headers_detail=["ID","Nombre", "Cantidad","Precio unitario","Descuento"]
                         
                         #Detalle del producto
-                        sql_product_detail= psfunc.PrintQuerry2(f"SELECT id_pedido, nombre, cantidad_producto, precio, descuento_aplicado \
+                        sql_product_detail= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, nombre, cantidad_producto, precio, descuento_aplicado \
                                                         FROM Pedidos INNER JOIN (SELECT id_pedido, nombre, cantidad_producto, precio, COALESCE(valor,0) AS descuento_aplicado FROM Descuentos FULL JOIN (SELECT id_pedido, nombre, cantidad_producto, id_descuento, precio FROM pedido_producto INNER JOIN Productos \
                                                         USING(id_producto)\
                                                         WHERE id_pedido= {id_order}) AS t1 USING(id_descuento)\
@@ -75,7 +75,7 @@ def Historial_pedidos(login_nombre_usuario):
                                                         WHERE id_usuario= {id_user}",headers_detail)
     
                         #Detalle del menu
-                        sql_menu_detail= psfunc.PrintQuerry2(f"SELECT id_pedido, nombre, cantidad_menu, precio, descuento_aplicado \
+                        sql_menu_detail= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, nombre, cantidad_menu, precio, descuento_aplicado \
                                                       FROM Pedidos INNER JOIN (SELECT id_pedido,nombre, cantidad_menu, precio, COALESCE(valor,0) AS descuento_aplicado FROM Descuentos JOIN (SELECT id_pedido, nombre, cantidad_menu, id_descuento, precio \
                                                       FROM pedido_menu INNER JOIN Menues \
                                                       USING(id_menu)\
@@ -169,7 +169,7 @@ def Historial_pedidos(login_nombre_usuario):
                         headers_detail=["ID","Nombre", "Cantidad","Precio unitario","Descuento"]
                         
                         #Detalle del producto
-                        sql_product_detail= psfunc.PrintQuerry2(f"SELECT id_pedido, nombre, cantidad_producto, precio, descuento_aplicado \
+                        sql_product_detail= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, nombre, cantidad_producto, precio, descuento_aplicado \
                                                         FROM Pedidos INNER JOIN (SELECT id_pedido, nombre, cantidad_producto, precio, COALESCE(valor,0) AS descuento_aplicado FROM Descuentos FULL JOIN (SELECT id_pedido, nombre, cantidad_producto, id_descuento, precio FROM pedido_producto INNER JOIN Productos \
                                                         USING(id_producto)\
                                                         WHERE id_pedido= {id_order}) AS t1 USING(id_descuento)\
@@ -234,7 +234,7 @@ def Historial_pedidos(login_nombre_usuario):
                         headers_detail=["ID","Nombre", "Cantidad","Precio unitario","Descuento"]
                         
                         #Detalle del menu
-                        sql_menu_detail= psfunc.PrintQuerry2(f"SELECT id_pedido, nombre, cantidad_menu, precio, descuento_aplicado \
+                        sql_menu_detail= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, nombre, cantidad_menu, precio, descuento_aplicado \
                                                       FROM Pedidos INNER JOIN (SELECT id_pedido,nombre, cantidad_menu, precio, COALESCE(valor,0) AS descuento_aplicado FROM Descuentos JOIN (SELECT id_pedido, nombre, cantidad_menu, id_descuento, precio \
                                                       FROM pedido_menu INNER JOIN Menues \
                                                       USING(id_menu)\
@@ -303,7 +303,7 @@ def Historial_pedidos(login_nombre_usuario):
             flag=True
             while flag:
                 headers=["Pedido","Repartidor","Nombre","Teléfono","Vehículo","Patente"]
-                sql_repartidor= psfunc.PrintQuerry2(f"SELECT id_pedido,id_repartidor, nombre, telefono, vehiculo, patente \
+                sql_repartidor= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido,id_repartidor, nombre, telefono, vehiculo, patente \
                                  FROM Pedidos INNER JOIN Repartidores \
                                  USING(id_repartidor)\
                                  WHERE id_pedido={id_order}",headers)
@@ -336,7 +336,7 @@ def Historial_pedidos(login_nombre_usuario):
                                                      USING(id_repartidor)\
                                                      WHERE id_pedido={id_order} AND puntuacion_repartidor IS null")
                         if sql_puntuacion!=[]:
-                            psfunc.PrintQuerryJ(f"UPDATE Pedidos SET puntuacion={option_rating} \
+                            psfunc.PrintQuerryNoHeaders(f"UPDATE Pedidos SET puntuacion={option_rating} \
                                                     WHERE id_pedido={id_order} AND puntuacion_repartidor IS NULL")
                         else:
                             print("El repartidor ya ha recibido una puntuación por parte de este usuario")
@@ -345,23 +345,21 @@ def Historial_pedidos(login_nombre_usuario):
                         continue
                     break
                 
-                if option==2:
+                elif option==2:
                     flag=False
-                    pass
                     
                 else:
                     continue
                 
-        if option_historial==2:
+        elif option_historial==2:
             menu=False
-            pass 
         
 def Repartidores():
     menu=True
     while menu:
         print("\nRepartidores")
         headers= ["ID","Nombre","Patente"]
-        sql= psfunc.PrintQuerry2("SELECT id_repartidor, nombre, patente \
+        sql= psfunc.PrintQuerryCustomHeaders("SELECT id_repartidor, nombre, patente \
                           FROM Repartidores \
                           ORDER BY id_repartidor",headers)
         print(sql)
@@ -378,7 +376,7 @@ def Repartidores():
             while flag_repartidor:
                 if option_repartidor!=0:
                     headers=["ID","Nombre","teléfono","vehículo","patente"]
-                    sql=psfunc.PrintQuerry2(f"SELECT*FROM Repartidores WHERE id_repartidor={option_repartidor}",headers)
+                    sql=psfunc.PrintQuerryCustomHeaders(f"SELECT*FROM Repartidores WHERE id_repartidor={option_repartidor}",headers)
                     print(sql)
                     menu_ver_repartidor=["Editar Repartidor",
                                          "Eliminar repartidor",
@@ -399,18 +397,18 @@ def Repartidores():
                             option_editor=psfunc.InputOpciones(menu_editor)
                             if option_editor==1:
                                 new_name=input("Ingrese el nuevo nombre del repartidor:")
-                                psfunc.PrintQuerryJ(f"UPDATE Repartidores SET nombre='{new_name}' WHERE id_repartidor={option_repartidor}")
+                                psfunc.PrintQuerryNoHeaders(f"UPDATE Repartidores SET nombre='{new_name}' WHERE id_repartidor={option_repartidor}")
                                 print("El repartidor ha sido editado exitosamente")
                                 pass
                             if option_editor==2:
                                 new_number=int(input("Ingrese el nuevo numero del repartidor:"))
-                                psfunc.PrintQuerryJ(f"UPDATE Repartidores SET telefono={new_number} WHERE id_repartidor={option_repartidor}")
+                                psfunc.PrintQuerryNoHeaders(f"UPDATE Repartidores SET telefono={new_number} WHERE id_repartidor={option_repartidor}")
                                 print("El telefono del repartidor ha sido editado exitosamente")
                                 pass
                             if option_editor==3:
                                 new_vehicle=input("Ingrese el nuevo vehículo del repartidor:")
                                 new_patent=input("Ingrese la patente del vehículo. En el caso de ser una bicicleta precione ENTER")
-                                psfunc.PrintQuerryJ(f"UPDATE Repartidores SET vehículo='{new_vehicle}, patente='{new_patent}' WHERE id_repartidor={option_repartidor}")
+                                psfunc.PrintQuerryNoHeaders(f"UPDATE Repartidores SET vehículo='{new_vehicle}, patente='{new_patent}' WHERE id_repartidor={option_repartidor}")
                                 print("El vehículo y la patente han sido editados exitosamente")
                                 pass
                             if option_editor==4:
@@ -418,7 +416,7 @@ def Repartidores():
                                 new_number=int(input("Ingrese el nuevo numero del repartidor:"))
                                 new_vehicle=input("Ingrese el nuevo vehículo del repartidor:")
                                 new_patent=input("Ingrese la patente del vehículo. En el caso de ser una bicicleta precione ENTER")
-                                psfunc.PrintQuerryJ(f"UPDATE Repartidores SET nombre='{new_name}',telefono={new_number},vehiculo='{new_vehicle}', patente='{new_patent}' WHERE id_repartidor={option_repartidor}")
+                                psfunc.PrintQuerryNoHeaders(f"UPDATE Repartidores SET nombre='{new_name}',telefono={new_number},vehiculo='{new_vehicle}', patente='{new_patent}' WHERE id_repartidor={option_repartidor}")
                                 print("Los campos del repartidor han sido editados exitosamente")
                                 pass
                             if option_editor==5:
@@ -433,7 +431,7 @@ def Repartidores():
                             option_delete=psfunc.InputOpciones(yes_no)
                             if option_delete==1:
                                 querry=f"DELETE FROM Repartidores WHERE id_repartidor={option_repartidor}" 
-                                psfunc.PrintQuerryJ(querry)
+                                psfunc.PrintQuerryNoHeaders(querry)
                                 print("El repartidor se ha eliminado exitosamente")
                                 break
                             if option_delete==2:
@@ -449,7 +447,7 @@ def Repartidores():
                     break
                 break
             
-        if option==2:
+        elif option==2:
             print("\nAgregar repartidor")
             table="Repartidores"
             new_name=input("Ingrese el nombre:")
@@ -462,6 +460,6 @@ def Repartidores():
             psfunc.GetCon().commit()
             print("\nRepartidor añadido con exito")
             
-        if option==3:
+        elif option==3:
             menu=False
             break   

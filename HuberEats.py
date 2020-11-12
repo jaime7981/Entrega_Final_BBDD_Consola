@@ -4,6 +4,17 @@ import Lorenzini as ln
 import Fernandez as fz
 import usefullfunc as psfunc
 
+def ValidacionUsuario():
+    print("Iniciar Sesion\n")
+    login_nombre_usuario = input("Ingresar nombre de usuario: ")
+    login_clave = input("Ingresar clave: ")
+    flag_menu_usuario = psfunc.ValidacionUsuario(login_nombre_usuario, login_clave)
+    if flag_menu_usuario == False:
+        print("Usuario o clave incorrecta")
+        return ""
+    if flag_menu_usuario == True:
+        return login_nombre_usuario
+
 def RegistrarUsuario():
     while True:
         print("Bienvenido a Hubber Eats\nRegistrarse:\n")
@@ -60,15 +71,9 @@ while main:
         psfunc.PrintQuerry(querry)
 
     elif opcion == 2:
-        #Validacion login
-        print("Iniciar Sesion\n")
-        login_nombre_usuario = input("Ingresar nombre de usuario: ")
-        login_clave = input("Ingresar clave: ")
-        flag_menu_usuario = psfunc.ValidacionUsuario(login_nombre_usuario, login_clave)
-        if flag_menu_usuario == False:
-            print("Usuario o clave incorrecta")
+        login_nombre_usuario = ValidacionUsuario()
 
-        while flag_menu_usuario:
+        while login_nombre_usuario != "":
             #Menu principal
             menu_entrada_usuario = ["Locales", 
                                     "Categorias", 

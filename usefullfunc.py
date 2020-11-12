@@ -22,7 +22,6 @@ def PrintQuerry(text):
     try:
         cur.execute(text)
         request = cur.fetchall()
-        print(len(request))
         if len(request) == 0:
             print("No hay datos")
             return False
@@ -36,7 +35,6 @@ def PrintQuerry(text):
         return False
 
 #InsertTest("nombre tabla", ("col1", "col2", "col3"), ("dato1", "dato2", "dato3"))
-#
 def InsertQuerry(table, lista_columnas, lista_datos):
 
     lista_d = "(" + ", ".join(lista_datos) + ")"
@@ -84,7 +82,7 @@ def DisplayMenu(lista_menu):
         print(str(counter) + ") " + str(titulo_opcion))
         counter += 1
 
-#Funcion que valida que la opcion ingresada sea un numero
+#Funcion que valida que la opcion ingresada sea un numero del menu
 def InputOpciones(menu):
     try:
         opcion = int(input())
@@ -118,34 +116,49 @@ def QuerryOptionIdCheck(querry, text):
         print("Error de querry")
         return 0
 
+#Vacia el carrito de compras
 def ClearShopingCart(menu_shoping_cart,product_shoping_cart):
     menu_shoping_cart.clear()
     product_shoping_cart.clear()
 
+#Agrega un producto o menu al carrito
+#True para producto False para menu
 def AddToCart(product_menu_id, product_menu_flag, menu_shoping_cart,product_shoping_cart):
-    #True para producto False para menu
     try:
         if product_menu_flag == True:
             product_shoping_cart.append(product_menu_id)
-        if product_menu_flag == False:
+        elif product_menu_flag == False:
             menu_shoping_cart.append(product_menu_id)
     except:
         print("Parametros ingresados a AddToCart debe ser (int, bool)")
 
+#Cierra la conexion a la bbdd
 def CloseSV():
     con.close()
 
+#Pasa la informacion de la conexion a la bbdd
+def GetCon():
+    return con
+
 ### FUNCIONES LORENZINI
-def PrintQuerryJ(text):
+
+#Tabula un querry sin headers
+def PrintQuerryNoHeaders(text):
     cur = con.cursor()
     try:
         cur.execute(text)
         request = cur.fetchall()
+        if len(request) == 0:
+            print("No hay datos")
+            return False
         print(tabulate(request, tablefmt="psql"))
+        return True
     except:
         print("Querry ingresado no valido")
+        return True
 
-def PrintQuerry2(text,headers):
+#Tabula un querry con los headers que uno le pase
+def PrintQuerryCustomHeaders(text,headers):
     cur = con.cursor()
     try:
         cur.execute(text)
@@ -166,6 +179,3 @@ def QuerryOptionIdCheck2(querry, option):
     except:
         print("Error de querry")
         return 0
-
-def GetCon():
-    return con
