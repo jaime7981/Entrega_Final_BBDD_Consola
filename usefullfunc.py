@@ -78,10 +78,7 @@ def DeleteQuerry(table, text):
 def UpdateQuerry(table, set_parameters, where_parameters):
     cur = con.cursor()
     try:
-        if where_parameters == "":
-            querry_text = "UPDATE " + table + "set " + set_parameters
-        else:
-            querry_text = "UPDATE " + table + "set " + set_parameters + " WHERE " + where_parameters
+        querry_text = "UPDATE " + table + " SET " + set_parameters + " WHERE " + where_parameters
         cur.execute(querry_text)
         con.commit()
         print("Exito al ejecutar UPDATE querry")

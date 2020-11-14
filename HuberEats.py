@@ -99,7 +99,7 @@ while main:
                 pass
 
             elif opcion == 5:
-                pass
+                fz.ShopingCart()
 
             elif opcion == 6:
                 ln.Historial_pedidos(login_nombre_usuario)
