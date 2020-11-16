@@ -38,6 +38,8 @@ def Historial_pedidos(login_nombre_usuario):
                 text="Ingrese el pedido que desea ver:"
                 querry=f"SELECT id_pedido FROM Pedidos WHERE id_usuario={id_user}"
                 id_order= psfunc.QuerryOptionIdCheck(querry,text)
+                if id_order == 0:
+                    whatch_order = False
                 if id_order!=0:
                     headers=["ID","Dirección","# ", "Fecha","Monto"]
                     sql_2= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido, calle,numero, fecha_pedido, monto FROM (SELECT id_pedido, (monto_producto+COALESCE(monto_menu,0)) AS monto FROM (SELECT id_pedido, monto_producto, monto_menu FROM (SELECT DISTINCT  id_pedido,  (cantidad_producto*precio) AS monto_producto \
@@ -298,56 +300,57 @@ def Historial_pedidos(login_nombre_usuario):
                     continue
                 break
             ##
-            flag=True
-            while flag:
-                headers=["Pedido","Repartidor","Nombre","Teléfono","Vehículo","Patente"]
-                sql_repartidor= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido,id_repartidor, nombre, telefono, vehiculo, patente \
-                                 FROM Pedidos INNER JOIN Repartidores \
-                                 USING(id_repartidor)\
-                                 WHERE id_pedido={id_order}",headers)
-                nombre_repartidor= psfunc.SelectQuerry(f"SELECT nombre \
-                                                FROM Pedidos INNER JOIN Repartidores \
-                                                USING(id_repartidor)\
-                                                WHERE id_pedido={id_order}")
-                nombre_repartidor= nombre_repartidor[0][0]
-                print("\nInformacion del repartidor")
-                print(sql_repartidor)
-                menu_dar_rating=["Dar rating",
-                                 "Volver a Historial de Pedidos"]
-                psfunc.DisplayMenu(menu_dar_rating)
-                option = psfunc.InputOpciones(menu_dar_rating)
-                if option==1:
-                    print(f"\nDar rating a {nombre_repartidor} ")
+            if id_order!=0:
+                flag=True
+                while flag:
+                    headers=["Pedido","Repartidor","Nombre","Teléfono","Vehículo","Patente"]
+                    sql_repartidor= psfunc.PrintQuerryCustomHeaders(f"SELECT id_pedido,id_repartidor, nombre, telefono, vehiculo, patente \
+                                    FROM Pedidos INNER JOIN Repartidores \
+                                    USING(id_repartidor)\
+                                    WHERE id_pedido={id_order}",headers)
+                    nombre_repartidor= psfunc.SelectQuerry(f"SELECT nombre \
+                                                    FROM Pedidos INNER JOIN Repartidores \
+                                                    USING(id_repartidor)\
+                                                    WHERE id_pedido={id_order}")
+                    nombre_repartidor= nombre_repartidor[0][0]
+                    print("\nInformacion del repartidor")
                     print(sql_repartidor)
-                    menu_puntuacion=["★",
-                                     "★★",
-                                     "★★★",
-                                     "★★★★",
-                                     "★★★★★",
-                                     "Volver a Ver Pedido"]
-                    psfunc.DisplayMenu(menu_puntuacion)
-                    option_rating = psfunc.InputOpciones(menu_puntuacion)
-                    
-                    if option_rating==1 or option_rating==2 or option_rating==3 or option_rating==4 or option_rating==5:
-                        sql_puntuacion= psfunc.SelectQuerry(f"SELECT puntuacion_repartidor \
-                                                     FROM Pedidos INNER JOIN Repartidores \
-                                                     USING(id_repartidor)\
-                                                     WHERE id_pedido={id_order} AND puntuacion_repartidor IS null")
-                        if sql_puntuacion!=[]:
-                            psfunc.PrintQuerryNoHeaders(f"UPDATE Pedidos SET puntuacion={option_rating} \
-                                                    WHERE id_pedido={id_order} AND puntuacion_repartidor IS NULL")
+                    menu_dar_rating=["Dar rating",
+                                    "Volver a Historial de Pedidos"]
+                    psfunc.DisplayMenu(menu_dar_rating)
+                    option = psfunc.InputOpciones(menu_dar_rating)
+                    if option==1:
+                        print(f"\nDar rating a {nombre_repartidor} ")
+                        print(sql_repartidor)
+                        menu_puntuacion=["★",
+                                        "★★",
+                                        "★★★",
+                                        "★★★★",
+                                        "★★★★★",
+                                        "Volver a Ver Pedido"]
+                        psfunc.DisplayMenu(menu_puntuacion)
+                        option_rating = psfunc.InputOpciones(menu_puntuacion)
+                        
+                        if option_rating==1 or option_rating==2 or option_rating==3 or option_rating==4 or option_rating==5:
+                            sql_puntuacion= psfunc.SelectQuerry(f"SELECT puntuacion_repartidor \
+                                                        FROM Pedidos INNER JOIN Repartidores \
+                                                        USING(id_repartidor)\
+                                                        WHERE id_pedido={id_order} AND puntuacion_repartidor IS null")
+                            if sql_puntuacion != False:
+                                psfunc.PrintQuerryNoHeaders(f"UPDATE Pedidos SET puntuacion={option_rating} \
+                                                        WHERE id_pedido={id_order} AND puntuacion_repartidor IS NULL")
+                            else:
+                                print("El repartidor ya ha recibido una puntuación por parte de este usuario")
+                                break
                         else:
-                            print("El repartidor ya ha recibido una puntuación por parte de este usuario")
-                            break
+                            continue
+                        break
+                    
+                    elif option==2:
+                        flag=False
+                        
                     else:
                         continue
-                    break
-                
-                elif option==2:
-                    flag=False
-                    
-                else:
-                    continue
                 
         elif option_historial==2:
             menu=False

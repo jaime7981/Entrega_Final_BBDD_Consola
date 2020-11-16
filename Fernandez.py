@@ -353,34 +353,34 @@ def MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, i
 
                     elif opcion == 5:
                         while True:
-                            psfunc.PrintQuerry("SELECT cat.id_categoria, cat.nombre FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
-                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lo.id_local = t1.id_local WHERE lc.id_local = " + str(id_local_seleccionado) + ") AS t2\
-                                ON t2.id_categoria = cat.id_categoria")
+                            psfunc.PrintQuerry("SELECT DISTINCT ON (cat.id_categoria)  cat.id_categoria, cat.nombre FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
+                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lc.id_local = t1.id_local WHERE lc.id_local = " + str(id_local_seleccionado) + ") AS t2\
+                                ON t2.id_categoria = cat.id_categoria ORDER BY cat.id_categoria")
                             opcion_local_id = ["Agregar Categoria",
                                                 "Eliminar Categoria",
                                                 "Volver Atras"]
                             psfunc.DisplayMenu(opcion_local_id)
                             opcion = psfunc.InputOpciones(opcion_local_id)
                             if opcion == 1:
-                                psfunc.PrintQuerry("SELECT cat.id_categoria, cat.nombre FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
-                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lo.id_local = t1.id_local WHERE lc.id_local NOT IN (" + str(id_local_seleccionado) + ")) AS t2\
-                                ON t2.id_categoria = cat.id_categoria")
+                                print("Agregar Categoria")
+                                psfunc.PrintQuerry("SELECT DISTINCT ON (cat.id_categoria) cat.id_categoria, cat.nombre FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
+                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lc.id_local = t1.id_local WHERE lc.id_local NOT IN (" + str(id_local_seleccionado) + ")) AS t2\
+                                ON t2.id_categoria = cat.id_categoria ORDER BY cat.id_categoria")
                                 id_categoria_seleccionada = psfunc.QuerryOptionIdCheck("SELECT cat.id_categoria FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
-                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lo.id_local = t1.id_local WHERE lc.id_local NOT IN (" + str(id_local_seleccionado) + ")) AS t2\
+                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lc.id_local = t1.id_local WHERE lc.id_local NOT IN (" + str(id_local_seleccionado) + ")) AS t2\
                                 ON t2.id_categoria = cat.id_categoria", 
                                     "Ingresar id categoria: ")
-                                psfunc.InsertQuerry("categoria_local", (), (str(id_local_seleccionado), str(id_categoria_seleccionada)))
-
                                 if id_categoria_seleccionada != 0:
-                                    psfunc.DeleteQuerry("categoria_local", "id_local = " + str(id_local_seleccionado) + " AND id_categoria = " + str(id_categoria_seleccionada))
+                                    psfunc.InsertQuerry("categoria_local", (), (str(id_local_seleccionado), str(id_categoria_seleccionada)))
 
                             elif opcion == 2:
+                                print("Eliminar Categoria")
                                 id_categoria_seleccionada = psfunc.QuerryOptionIdCheck("SELECT cat.id_categoria FROM categorias cat INNER JOIN (SELECT lc.id_local, t1.id_categoria FROM locales lc \
-                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lo.id_local = t1.id_local WHERE lc.id_local = " + str(id_local_seleccionado) + ") AS t2\
+                                FULL JOIN (SELECT * FROM categoria_local) AS t1 ON lc.id_local = t1.id_local WHERE lc.id_local = " + str(id_local_seleccionado) + ") AS t2\
                                 ON t2.id_categoria = cat.id_categoria", 
                                     "Ingresar id categoria: ")
                                 if id_categoria_seleccionada != 0:
-                                    pass
+                                    psfunc.DeleteQuerry("categoria_local", "id_local = " + str(id_local_seleccionado) + " AND id_categoria = " + str(id_categoria_seleccionada))
 
                             elif opcion == 3:
                                 break
@@ -389,8 +389,10 @@ def MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, i
                         fav = psfunc.SelectQuerry("SELECT * FROM usuario_favoritos WHERE id_local = " + str(id_local_seleccionado) + " AND id_usuario = " + str(id_user))
                         if fav:
                             psfunc.DeleteQuerry("usuario_favoritos", "id_local = " + str(id_local_seleccionado) + " AND id_usuario = " + str(id_user))
+                            print("Eliminado de favoritos")
                         else:
-                            psfunc.InsertQuerry("usuario_favorito", (), (str(id_user), str(id_local_seleccionado)))
+                            psfunc.InsertQuerry("usuario_favoritos", (), (str(id_user), str(id_local_seleccionado)))
+                            print("Agregado a favoritos")
 
                     elif opcion == 7:
                         Rating(id_local_seleccionado, id_user)
@@ -408,7 +410,6 @@ def MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, i
 ### MENU PARA CARRITO
 def ShopingCart(menu_shoping_cart, product_shoping_cart, id_user):
     while True:
-        psfunc.PrintQuerry("SELECT * FROM locales")
         opciones_carrito = ["Eliminar Item",
                             "Vaciar Carrito",
                             "Eligir Promocion",

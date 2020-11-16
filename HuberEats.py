@@ -89,7 +89,7 @@ while main:
                 gb.CategoriasMenu()
 
             elif opcion == 3:
-                gb.PromocionesMenu()
+                gb.PromocionesMenu(id_user)
 
             elif opcion == 4:
                 ln.Directions(login_nombre_usuario)

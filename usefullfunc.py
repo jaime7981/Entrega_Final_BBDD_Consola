@@ -22,6 +22,7 @@ def SelectQuerry(text):
         return request
     except:
         print("Querry ingresado no valido")
+        return False
 
 #Tabula e imprime un querry en la consola
 def PrintQuerry(text):
