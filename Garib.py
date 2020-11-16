@@ -1,5 +1,4 @@
 import usefullfunc as psfunc
-import os
 from datetime import datetime
 
 def CategoriasMenu():

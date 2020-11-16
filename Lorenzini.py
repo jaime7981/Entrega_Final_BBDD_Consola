@@ -1,5 +1,4 @@
 import usefullfunc as psfunc
-import os
 
 #Historial de pedido
 def Historial_pedidos(login_nombre_usuario):

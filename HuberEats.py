@@ -53,23 +53,17 @@ product_shoping_cart = []
 
 #Programa principal
 main = True
-print("Bienveido")
+print("Bienvenido A Huber Eats")
 
 while main:
     #Menu de inicio
-    login_menu = ["Ingrese querry",
-                  "Iniciar Sesion", 
+    login_menu = ["Iniciar Sesion", 
                   "Registrarse", 
-                  "Exit",
-                  "Ver Usuarios"]
+                  "Exit"]
     psfunc.DisplayMenu(login_menu)
     opcion = psfunc.InputOpciones(login_menu)
 
     if opcion == 1:
-        querry = input("Ingresar querry: ")
-        psfunc.PrintQuerry(querry)
-
-    elif opcion == 2:
         login_nombre_usuario = ValidacionUsuario()
 
         while login_nombre_usuario != "":
@@ -101,7 +95,7 @@ while main:
                 ln.Directions(login_nombre_usuario)
 
             elif opcion == 5:
-                fz.ShopingCart()
+                fz.ShopingCart(menu_shoping_cart, product_shoping_cart, id_user)
 
             elif opcion == 6:
                 ln.Historial_pedidos(login_nombre_usuario)
@@ -117,13 +111,10 @@ while main:
                 psfunc.ClearShopingCart(menu_shoping_cart, product_shoping_cart)
                 break
 
-    elif opcion == 3:
+    elif opcion == 2:
         RegistrarUsuario()
 
-    elif opcion == 4:
+    elif opcion == 3:
         main = False
-    
-    elif opcion == 5:
-        psfunc.PrintQuerry("SELECT * FROM usuarios")
 
 psfunc.CloseSV()

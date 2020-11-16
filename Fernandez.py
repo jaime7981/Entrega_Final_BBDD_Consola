@@ -102,7 +102,7 @@ def EliminarMenu(id_local_seleccionado ,id_menu_seleccionado):
 
 def EliminarProductoMenu(id_menu_seleccionado):
     id_producto_seleccionado = psfunc.QuerryOptionIdCheck("SELECT mp.id_producto FROM menu_producto mp INNER JOIN \
-                                            (SELECT men.id_menu FROM menues men WHERE id_menu = 20) AS t1 ON mp.id_menu = t1.id_menu",
+                                            (SELECT men.id_menu FROM menues men WHERE id_menu = " + str(id_menu_seleccionado) + ") AS t1 ON mp.id_menu = t1.id_menu",
                                             "Ingresar ID producto: ")
     if id_producto_seleccionado != 0:
         delete_product_from_menu = input("Eliminar el producto del menu? (S/N) ")
@@ -120,7 +120,7 @@ def VerMenus(id_local_seleccionado, menu_shoping_cart, product_shoping_cart):
         psfunc.DisplayMenu(opcion_menues)
         opcion = psfunc.InputOpciones(opcion_menues)
         if opcion == 1:
-            id_menu_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_menu FROM menues",
+            id_menu_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_menu FROM menues WHERE id_local = " + str(id_local_seleccionado),
                                                               "Ingresar id menu: ")
             if id_menu_seleccionado != 0:
                 while True:
@@ -190,7 +190,7 @@ def Productos(id_local_seleccionado, menu_shoping_cart, product_shoping_cart):
         psfunc.DisplayMenu(opcion_local_productos)
         opcion = psfunc.InputOpciones(opcion_local_productos)
         if opcion == 1:
-            id_producto_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_producto FROM productos", 
+            id_producto_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_producto FROM productos WHERE id_local = " + str(id_local_seleccionado), 
                                     "Ingresar id producto: ")
             if id_producto_seleccionado != 0:
                 while True:
@@ -208,7 +208,7 @@ def Productos(id_local_seleccionado, menu_shoping_cart, product_shoping_cart):
                     
                     elif opcion == 2:
                         psfunc.PrintQuerry("SELECT * FROM menues WHERE id_local = " + str(id_local_seleccionado))
-                        id_menu_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_menu FROM menues",
+                        id_menu_seleccionado = psfunc.QuerryOptionIdCheck("SELECT id_menu FROM menues WHERE id_menu = " + str(id_menu_seleccionado),
                                             "Ingresar id menu: ")
                         if id_menu_seleccionado != 0:
                             pr_men = psfunc.SelectQuerry("SELECT * FROM menu_producto WHERE id_menu = " + str(id_menu_seleccionado) + " AND id_producto = " + str(id_producto_seleccionado))
@@ -406,7 +406,7 @@ def MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, i
 
 
 ### MENU PARA CARRITO
-def ShopingCart():
+def ShopingCart(menu_shoping_cart, product_shoping_cart, id_user):
     while True:
         psfunc.PrintQuerry("SELECT * FROM locales")
         opciones_carrito = ["Eliminar Item",
