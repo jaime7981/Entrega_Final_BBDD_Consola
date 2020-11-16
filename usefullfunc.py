@@ -72,8 +72,10 @@ def DeleteQuerry(table, text):
         cur.execute(querry_text)
         con.commit()
         print("Exito al ejecutar DELETE querry")
+        return True
     except:
         print("Error al intentar eliminar la linea")
+        return False
 
 def UpdateQuerry(table, set_parameters, where_parameters):
     cur = con.cursor()
