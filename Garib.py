@@ -71,7 +71,7 @@ def PromocionesMenu(id_user):
 
             promocion_seleccionada = psfunc.QuerryOptionIdCheck("SELECT id_codigo FROM promociones", "Que promocion quiere agregar?: ")
 
-            querry = psfunc.InsertQuerry("promocion_usuario", (["id_usuario", "id_codigo", "fecha_canje"]), ([id_user, promocion_seleccionada, "'" + datetime.today().strftime('%Y-%m-%d') + "'"]))
+            querry = psfunc.InsertQuerry("promocion_usuario", (["id_usuario", "id_codigo", "fecha_canje"]), ([str(id_user), str(promocion_seleccionada), "'" + datetime.today().strftime('%Y-%m-%d') + "'"]))
             if(querry):
                 print("!Promoción agregada a usuario!")
             else:

@@ -5,8 +5,10 @@ import usefullfunc as psfunc
 
 def ValidacionUsuario():
     print("Iniciar Sesion\n")
-    login_nombre_usuario = input("Ingresar nombre de usuario: ")
-    login_clave = input("Ingresar clave: ")
+    #login_nombre_usuario = input("Ingresar nombre de usuario: ")
+    #login_clave = input("Ingresar clave: ")
+    login_nombre_usuario = "manuel99@gmail.com"
+    login_clave = "manuel99"
     flag_menu_usuario = psfunc.ValidacionUsuario(login_nombre_usuario, login_clave)
     if flag_menu_usuario == False:
         print("Usuario o clave incorrecta")
@@ -48,8 +50,8 @@ def RegistrarUsuario():
             print("Usuario no valido")
             break
 
-menu_shoping_cart = []
-product_shoping_cart = []
+menu_shoping_cart = [12]
+product_shoping_cart = [12]
 
 #Programa principal
 main = True

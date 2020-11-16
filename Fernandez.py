@@ -1,4 +1,6 @@
 import usefullfunc as psfunc
+from tabulate import tabulate
+from random import randint
 
 ### MENU PARA LOCAL
 def AgregarLocal():
@@ -409,7 +411,20 @@ def MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, i
 
 ### MENU PARA CARRITO
 def ShopingCart(menu_shoping_cart, product_shoping_cart, id_user):
+    descuento_carrito = 0
+    direccion_pedido = ""
     while True:
+        general_cart = []
+        for a in menu_shoping_cart:
+            menu_on_cart = psfunc.SelectQuerry("SELECT * FROM menues WHERE id_menu = " + str(a))
+            general_cart.append(menu_on_cart[0])
+        for a in menu_shoping_cart:
+            menu_on_cart = psfunc.SelectQuerry("SELECT * FROM productos WHERE id_producto = " + str(a))
+            general_cart.append(menu_on_cart[0])
+        
+        print(tabulate(general_cart, 
+                        headers=["ID Item", "ID Local", "Descuento", "Nombre", "Precio"],
+                        tablefmt="psql"))
         opciones_carrito = ["Eliminar Item",
                             "Vaciar Carrito",
                             "Eligir Promocion",
@@ -418,21 +433,76 @@ def ShopingCart(menu_shoping_cart, product_shoping_cart, id_user):
                             "Volver Atras"]
         psfunc.DisplayMenu(opciones_carrito)
         opcion = psfunc.InputOpciones(opciones_carrito)
-
         if opcion == 1:
-            print("No Implementado")
+            try:
+                id_item = int(input("Ingresar ID item a eliminar: "))
+                id_local = int(input("Ingresar ID del local: "))
+
+                for local in range(len(general_cart)):
+                    if id_item == general_cart[local][0]:
+                        if id_local == general_cart[local][1]:
+                            try:
+                                menu_shoping_cart.remove(general_cart[local][0])
+                            except:
+                                pass
+                            try:
+                                product_shoping_cart.remove(general_cart[local][0])
+                            except:
+                                pass
+                            print("Item eliminado")
+                            
+            except:
+                print("Valor no valido")
 
         elif opcion == 2:
-            print("No Implementado")
+            psfunc.ClearShopingCart(menu_shoping_cart, product_shoping_cart)
 
         elif opcion == 3:
-            print("No Implementado")
+            if psfunc.PrintQuerry("SELECT pr.id_codigo, pr.nombre, pr.fecha_venc, pr.descripcion FROM promociones pr \
+                                FULL JOIN (SELECT * FROM promocion_usuario) AS t1 ON t1.id_codigo = pr.id_codigo\
+                                WHERE t1.id_usuario = " + str(id_user)):
+                opcion_seleccionar_promocion = psfunc.QuerryOptionIdCheck("SELECT pr.id_codigo FROM promociones pr \
+                                    FULL JOIN (SELECT * FROM promocion_usuario) AS t1 ON t1.id_codigo = pr.id_codigo\
+                                    WHERE t1.id_usuario = " + str(id_user), "Seleccionar Promocion:")
+                
+                if opcion_seleccionar_promocion != 0:
+                    descuento_carrito = psfunc.SelectQuerry("SELECT pr.monto FROM promociones pr \
+                                    FULL JOIN (SELECT * FROM promocion_usuario) AS t1 ON t1.id_codigo = pr.id_codigo\
+                                    WHERE t1.id_usuario = " + str(id_user) + " AND pr.id_codigo = " + str(opcion_seleccionar_promocion))
+
+                    descuento_carrito = descuento_carrito[0][0]
 
         elif opcion == 4:
-            print("No Implementado")
+            if psfunc.PrintQuerry("SELECT * FROM direcciones dir FULL JOIN (SELECT * FROM usuario_direccion) AS t1 ON t1.id_direccion = dir.id_direccion WHERE t1.id_usuario = " + str(id_user)):
+                opcion_seleccionar_direccion = psfunc.QuerryOptionIdCheck("SELECT dir.id_direccion FROM direcciones dir FULL JOIN (SELECT * FROM usuario_direccion) AS t1 ON t1.id_direccion = dir.id_direccion WHERE t1.id_usuario = " + str(id_user),
+                                                                        "Seleccione ID direccion: ")
+                if opcion_seleccionar_direccion != 0:
+                    direccion_pedido_aux = psfunc.SelectQuerry("SELECT dir.nombre, dir.calle, dir.numero, dir.comuna, dir.region FROM direcciones dir FULL JOIN (SELECT * FROM usuario_direccion) AS t1 ON t1.id_direccion = dir.id_direccion WHERE t1.id_usuario = " + str(id_user) + " AND id_direccion = " + str(opcion_seleccionar_direccion))
+                    direccion_pedido = direccion_pedido_aux[0][0], direccion_pedido_aux[0][1], direccion_pedido_aux[0][2], direccion_pedido_aux[0][3], direccion_pedido_aux[0][4]
 
         elif opcion == 5:
-            print("No Implementado")
+            print("Confirmar Pedido")
+            if len(general_cart) >= 0:
+                if len(direccion_pedido) > 0:
+                    suma_carro = 0
+                    for local in range(len(general_cart)):
+                        suma_carro += general_cart[local][4]
+
+                    print("Calcular Pedido")
+                    print("Direccion: ", direccion_pedido)
+                    print("Descuento: ", str(descuento_carrito))
+                    print("Total Pedido: ", suma_carro)
+                    confirmar_pedido = input("Desea Confirmar Pedido? (S/N)")
+                    if confirmar_pedido == "S":
+                        repartidores_seleccionar = psfunc.SelectQuerry("SELECT id_repartidor FROM repartidores")
+                        random_id = randint(0,len(repartidores_seleccionar))
+                        print("Sera atendido por")
+                        psfunc.PrintQuerry("SELECT * FROM repartidores WHERE id_repartidor = " + str(random_id))
+
+                else:
+                    print("No ha escogido una direccion de envio")
+            else:
+                print("No hay productos en el carro")
 
         elif opcion == 6:
             break
