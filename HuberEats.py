@@ -73,6 +73,8 @@ while main:
         login_nombre_usuario = ValidacionUsuario()
 
         while login_nombre_usuario != "":
+            id_user= psfunc.SelectQuerry(f"SELECT id_usuario FROM Usuarios WHERE email= '{login_nombre_usuario}'")
+            id_user= id_user[0][0]
             #Menu principal
             menu_entrada_usuario = ["Locales", 
                                     "Categorias", 
@@ -87,7 +89,7 @@ while main:
             opcion = psfunc.InputOpciones(menu_entrada_usuario)
 
             if opcion == 1:
-                fz.MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart)
+                fz.MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart, id_user)
 
             elif opcion == 2:
                 gb.CategoriasMenu()

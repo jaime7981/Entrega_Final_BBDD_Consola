@@ -1,10 +1,15 @@
 import psycopg2 as svpg
 from tabulate import tabulate
-con = svpg.connect(database="grupo6", 
-                 user="grupo6", 
-                 password="99sFKQ", 
-                 host="201.238.213.114", 
-                 port="54321")
+
+try:
+    con = svpg.connect(database="grupo6",
+                    user="grupo6",
+                    password="99sFKQ",
+                    host="201.238.213.114",
+                    port="54321")
+    print("Conexion exitosa")
+except:
+    print("No se pudo conectar a la bbdd")
 
 #Devuelve un querry
 def SelectQuerry(text):
@@ -12,6 +17,8 @@ def SelectQuerry(text):
     try:
         cur.execute(text)
         request = cur.fetchall()
+        if len(request) == 0:
+            return False
         return request
     except:
         print("Querry ingresado no valido")
