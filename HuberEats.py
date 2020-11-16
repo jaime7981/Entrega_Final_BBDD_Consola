@@ -1,5 +1,3 @@
-from tabulate import tabulate
-import os
 import Lorenzini as ln
 import Fernandez as fz
 import Garib as gb
@@ -98,7 +96,7 @@ while main:
                 gb.PromocionesMenu()
 
             elif opcion == 4:
-                pass
+                ln.Directions(login_nombre_usuario)
 
             elif opcion == 5:
                 fz.ShopingCart()

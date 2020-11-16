@@ -1,4 +1,3 @@
-from tabulate import tabulate
 import usefullfunc as psfunc
 
 ### MENU PARA LOCAL
@@ -223,7 +222,7 @@ def ShopingCart():
                             "Vaciar Carrito",
                             "Eligir Promocion",
                             "Elegir Direccion",
-                            "Confirmar Pedido"
+                            "Confirmar Pedido",
                             "Volver Atras"]
         psfunc.DisplayMenu(opciones_carrito)
         opcion = psfunc.InputOpciones(opciones_carrito)
