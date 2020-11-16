@@ -153,7 +153,21 @@ def VerMenus(id_local_seleccionado, menu_shoping_cart, product_shoping_cart):
                         EliminarMenu(id_local_seleccionado, id_menu_seleccionado)
 
                     elif opcion == 5:
-                        print("Implementar opcion descuento")
+                        desc = psfunc.SelectQuerry("SELECT * FROM menues FULL JOIN (SELECT * FROM descuentos) AS t1 ON t1.id_descuento = menues.id_descuento\
+                             WHERE id_menu = " + str(id_menu_seleccionado) + " AND id_local = " + str(id_local_seleccionado))
+                        if desc:
+                            psfunc.DeleteQuerry("descuentos", "id_descuento = " + str(desc[0][0]))
+                        else:
+                            print("Crear Descuento")
+                            try:
+                                valor = int(input("Valor del descuento: "))
+                                tipo = input("Descuento Por Valor(N)/Porcentaje(P)")
+                                if tipo == "P" or tipo == "N":
+                                    psfunc.InsertQuerry("descuentos", (), (tipo, str(valor)))
+                                else:
+                                    print("Opcion no valida")
+                            except:
+                                print("Valor no valido")
 
                     elif opcion == 6:
                         break
@@ -236,7 +250,21 @@ def Productos(id_local_seleccionado, menu_shoping_cart, product_shoping_cart):
                                                 " AND id_local = " + str(id_local_seleccionado))
 
                     elif opcion == 5:
-                        print("Implementar Descuento Producto")
+                        desc = psfunc.SelectQuerry("SELECT * FROM productos FULL JOIN (SELECT * FROM descuentos) AS t1 ON t1.id_descuento = productos.id_descuento\
+                             WHERE id_producto = " + str(id_producto_seleccionado) + " AND id_local = " + str(id_local_seleccionado))
+                        if desc:
+                            psfunc.DeleteQuerry("descuentos", "id_descuento = " + str(desc[0][0]))
+                        else:
+                            print("Crear Descuento")
+                            try:
+                                valor = int(input("Valor del descuento: "))
+                                tipo = input("Descuento Por Valor(N)/Porcentaje(P)")
+                                if tipo == "P" or tipo == "N":
+                                    psfunc.InsertQuerry("descuentos", (), (tipo, str(valor)))
+                                else:
+                                    print("Opcion no valida")
+                            except:
+                                print("Valor no valido")
 
                     elif opcion == 6:
                         break
