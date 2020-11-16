@@ -2,6 +2,7 @@ from tabulate import tabulate
 import os
 import Lorenzini as ln
 import Fernandez as fz
+import Garib as gb
 import usefullfunc as psfunc
 
 def ValidacionUsuario():
@@ -89,11 +90,12 @@ while main:
 
             if opcion == 1:
                 fz.MenuLocales(login_nombre_usuario, menu_shoping_cart, product_shoping_cart)
+
             elif opcion == 2:
-                pass
+                gb.CategoriasMenu()
 
             elif opcion == 3:
-                pass
+                gb.PromocionesMenu()
 
             elif opcion == 4:
                 pass
@@ -103,11 +105,9 @@ while main:
 
             elif opcion == 6:
                 ln.Historial_pedidos(login_nombre_usuario)
-                pass
 
             elif opcion == 7:
                 ln.Repartidores()
-                pass
 
             elif opcion == 8:
                 break

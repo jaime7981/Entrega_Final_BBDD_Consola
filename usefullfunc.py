@@ -189,3 +189,20 @@ def QuerryOptionIdCheck2(querry, option):
     except:
         print("Error de querry")
         return 0
+
+### FUNCIONES GARIB
+
+def EditQuerry(table, columnas, valores, where):
+    cur = con.cursor()
+    update_sql = ''
+    for x in range(len(columnas)):
+        update_sql += "{} = '{}'".format(columnas[x], valores[x])
+
+    querry_text = "UPDATE {} SET {} WHERE {}".format(table, update_sql,where)
+    
+    try:
+        cur.execute(querry_text)
+        con.commit()
+        return True
+    except:
+        return False
